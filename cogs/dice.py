@@ -9,10 +9,10 @@ class Dice:
     def __init__(self, Aya):
         self.Aya = Aya
 
-    @commands.command(pass_context=True, aliases=['rolldice', 'diceroll'])
+    @commands.command(aliases=['rolldice', 'diceroll'])
     async def dice(self, ctx, number_of_dice=1):
         '''Rolls a certain number of dice'''
-        serv_owner = ctx.message.server.owner
+        serv_owner = discord.Guild.owner
         fmt = ''
         for i in range(1, number_of_dice + 1):
             fmt += '`Dice {}: {}`\n'.format(i, random.randint(1, 6))
@@ -21,9 +21,9 @@ class Dice:
         color = discord.Color(value=color)
         em = discord.Embed(color=color, title='Roll a certain number of dice', description=fmt)
         try:
-            await self.Aya.say(embed=em)
+            await ctx.send(embed=em)
         except discord.HTTPException:
-            await self.Aya.say('{} I need the embed links permission to send this.'.format(serv_owner.mention))
+            await ctx.send('{} I need the embed links permission to send this.'.format(serv_owner.mention))
 
 
 

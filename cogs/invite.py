@@ -10,9 +10,9 @@ class Invite:
         self.Aya = Aya
 
     @commands.command()
-    async def invite(self):
+    async def invite(self, ctx):
         """ Use this link to add Aya to your server! """
-        serv_owner = ctx.message.server.owner
+        serv_owner = discord.Guild.owner
         color = ('#%06x' % random.randint(8, 0xFFFFFF))
         color = int(color[1:], 16)
         color = discord.Color(value=color)
@@ -20,11 +20,11 @@ class Invite:
                            title='Invite me to your server!',
                            footer='Aya',
                            description='[Click here](https://discordapp.com/api/oauth2/authorize?client_id={}&scope=bot&permissions=8)'
-                           .format(self.Aya.user.id))
+                           .format(discord.ClientUser.id))
         try:
-            await self.Aya.say(embed=em)
+            await ctx.send(embed=em)
         except discord.HTTPException:
-            await self.Aya.say('{} I need the embed links permission to send this.'.format(serv_owner.mention))
+            await ctx.send('{} I need the embed links permission to send this.'.format(serv_owner))
 
 
 def setup(Aya):

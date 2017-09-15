@@ -9,10 +9,10 @@ class Ball:
     def __init__(self, Aya):
         self.Aya = Aya
 
-    @commands.command(pass_context=True, aliases=['8ball', 'ball8'])
+    @commands.command(aliases=['8ball', 'ball8'])
     async def eball(self, ctx, *, yourquestion):
         """Let the 8 ball decide your fate"""
-        serv_owner = ctx.message.server.owner
+        serv_owner = discord.Guild.owner
         question = yourquestion
         answers = ['It is certain', 'Yes', 'I don\'t know, probably?', 'HELL YEAH!!!', 'Of course', 'Most likely',
                    'Yup',
@@ -25,9 +25,9 @@ class Ball:
         em = discord.Embed(color=color, title='Let the 8 ball decide',
                            description='Question: ' + question + '\nAnswer: ' + random.choice(answers))
         try:
-            await self.Aya.say(embed=em)
+            await ctx.send(embed=em)
         except discord.HTTPException:
-            await self.Aya.say('{} I need the embed links permission to send this.'.format(serv_owner.mention))
+            await ctx.send('{} I need the embed links permission to send this.'.format(serv_owner.mention))
 
 
 def setup(Aya):

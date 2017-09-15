@@ -5,9 +5,8 @@
 # Aya : The Multi-Purpose Discord Bot
 Aya is a highly modular general purpose bot that gives you control over your discord server.
 
-### Features: 
-List of supported features:
-- [ ] Auto/Moderation features (Cleaning, AutoCleaning, Ban, Kick, Filter)
+
+#on features (Cleaning, AutoCleaning, Ban, Kick, Filter)
 - [ ] Server setup features (Auto setup, template setup)
 - [ ] Music features (Playlists, Queues, Youtube support)
 - [ ] Game features (Lottery, War, Blackjack, Competitions)
@@ -29,3 +28,8 @@ To become a **contributor**, join [the discord server](https://discord.gg/PuScp9
 
 ### Join Us:
 Join [the official discord server](https://discord.gg/PuScp9K) to contribute to Aya and be the first to beta test it!
+=======
+#### REWRITE :
+This branch is for the rewrite version of Aya, adapting to the rewrite API made by [Rapptz](https://github.com/Rapptz/discord.py)
+It is not intended for production use
+

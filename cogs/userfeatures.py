@@ -18,31 +18,27 @@ class UserFeatures:
         with open(self.USER_FILE, 'w') as f:
             f.write(json.dumps(self.data, indent=4))
 
-    @commands.command(pass_context=True)
+    @commands.command()
     async def register(self, ctx):
         # get the IDs
         user_id = str(ctx.message.author.id)
-        guild_id = str(ctx.message.server.id)
-
+        guild_id = discord.Guild.id
         # if user not registered, create an account
         if user_id not in data:
-            account = {
-                'guild': guild_id,
-                'payday': datetime.datetime.utcnow(),
-                'money': self.DEFAULT_BALANCE
-            }
-            
-            # update the database
-            self.data[user_id] = account
-            self.save()
-                
-            await self.Aya.say('Registration complete. Balance: $%d' % account['money'])
-            
-        # do nothing if they already have an account
+            user = {'user': user_id, 'guild': guild_id, 'money': 200}
+            data[user_id] = user
+            global pdcollect
+            pdcollect = False
+            await ctx.send('Registration complete. Balance: $200')
         else:
-            await self.Aya.say('You already have an account.')
+            await ctx.send('You already have an account.')
 
-    @commands.command(pass_context=True, aliases=['bal'])
+        # save that data back to the database
+        with open('data/bankholders.json', 'w') as f:
+            f.write(json.dumps(data, indent=4))
+
+    @commands.command(aliases=['bal'])
+
     async def balance(self, ctx):
         # get account info
         user_id = str(ctx.message.author.id)
@@ -53,15 +49,14 @@ class UserFeatures:
         
         # create embed
         em = discord.Embed(title='Balance', color=0x2ECC71)
-        em.add_field(name='Account Holder', value=ctx.message.author)
-        em.add_field(name='Account Balance', value=account['money'])
-        
+        em.add_field(name='Account Holder', value=discord.Message.author)
+        em.add_field(name='Account Balance', value=data[user_id]['money'])
         try:
-            await self.Aya.say(embed=em)
+            await ctx.send(embed=em)
         except discord.HTTPException:
-            await self.Aya.say('{} I need the embed links permission to send this.'.format(serv_owner.mention))
+            await ctx.send('{} I need the embed links permission to send this.'.format(serv_owner))
 
-    @commands.command(pass_context=True)
+    @commands.command()
     async def payday(self, ctx):
         # get account details
         user_id = str(ctx.message.author.id)
