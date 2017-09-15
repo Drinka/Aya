@@ -5,20 +5,25 @@ import json
 
 
 class UserFeatures:
+    USER_FILE = "data/bankholders.json"
+    DEFAULT_BALANCE = 200
+    DEFAULT_PAYDAY = 100
+    
     def __init__(self, Aya):
         self.Aya = Aya
-
+        with open(self.USER_FILE, 'r') as f:
+            self.data = json.loads(f.read())
+            
+    def save(self):
+        with open(self.USER_FILE, 'w') as f:
+            f.write(json.dumps(self.data, indent=4))
 
     @commands.command()
     async def register(self, ctx):
-        # read the data from the file and convert it to json
-        with open('data/bankholders.json', 'r') as f:
-            data = json.loads(f.read())
         # get the IDs
         user_id = str(ctx.message.author.id)
         guild_id = discord.Guild.id
-
-        # if not in data, give money to start off
+        # if user not registered, create an account
         if user_id not in data:
             user = {'user': user_id, 'guild': guild_id, 'money': 200}
             data[user_id] = user
@@ -33,10 +38,16 @@ class UserFeatures:
             f.write(json.dumps(data, indent=4))
 
     @commands.command(aliases=['bal'])
+
     async def balance(self, ctx):
+        # get account info
         user_id = str(ctx.message.author.id)
-        with open('data/bankholders.json', 'r') as f:
-            data = json.loads(f.read())
+        serv_owner = ctx.message.server.owner
+        if user_id not in self.data:
+            return await self.Aya.say('You don\'t have an account, please register using `a.register`')
+        account = self.data[user_id]
+        
+        # create embed
         em = discord.Embed(title='Balance', color=0x2ECC71)
         em.add_field(name='Account Holder', value=discord.Message.author)
         em.add_field(name='Account Balance', value=data[user_id]['money'])
@@ -47,15 +58,22 @@ class UserFeatures:
 
     @commands.command()
     async def payday(self, ctx):
+        # get account details
         user_id = str(ctx.message.author.id)
-        with open('data/bankholders.json', 'r') as f:
-            data = json.loads(f.read())
-        global pdcollect
-        if pdcollect == False:
-            pdcollect = True
+        if user_id not in self.data:
+            return await self.Aya.say('You don\'t have an account, please register using `a.register`.')
+        account = self.data[user_id]
+        
+        # check if its payday for the user
+        now = datetime.datetime.utcnow()
+        if (now - account['payday']) > datetime.timedelta(1):
+            await self.Aya.say('Its payday! You received %d' % self.DEFAULT_PAYDAY)
+            account['payday'] = now
+            account['money'] += self.DEFAULT_PAYDAY
+            self.save()
         else:
-            pass
-
+            time_left = now - account['payday']
+            await self.Aya.say('You still have ' + time_left + ' until your next payday.')
 
 def setup(Aya):
     Aya.add_cog(UserFeatures(Aya))

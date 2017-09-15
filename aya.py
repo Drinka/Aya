@@ -16,21 +16,30 @@ Aya = commands.Bot('a.')
 Aya.remove_command('help')
 
 default_extensions = [
-    'cogs.help',
-    'cogs.invite',
-    'cogs.moderator',
-    'cogs.coinflip',
-    'cogs.dice',
-    'cogs.gif',
-    'cogs.8ball',
-    'cogs.userfeatures',
-    'cogs.minigames',
+     'cogs.help',
+     'cogs.invite',
+     'cogs.moderator',
+     'cogs.coinflip',
+     'cogs.dice',
+     'cogs.gif',
+     'cogs.8ball',
+     'cogs.userfeatures',
+     'cogs.minigames',
+    'cogs.blacklist',
 ]
 
 
 @Aya.event
 async def on_ready():
     print('Aya is ready! \n User : {} \n ID : {}'.format(Aya.user.name, Aya.user.id))
+
+
+
+def is_owner():
+    def predicate(ctx):
+        return ctx.message.author == ctx.message.guild.owner
+    return commands.check(predicate)
+
 
 @Aya.command()
 async def cogs(ctx):
@@ -52,9 +61,9 @@ async def load(ctx, *, cogname):
             await ctx.send('{}: {}'.format(type(e).__name__, e))
         else:
             await ctx.send('\N{OK HAND SIGN}')
-    else:
-        Aya.say('You don\'t have permission.')
 
+    else:
+        await ctx.send('\N{OK HAND SIGN}')
 
 @Aya.command()
 async def unload(ctx, *, cogname):
@@ -73,28 +82,38 @@ async def unload(ctx, *, cogname):
         ctx.send('You don\'t have permission.')
 
 
-@Aya.command(pass_context=True)
+@Aya.command()
+@is_owner()
 async def reload(ctx, *, cogname):
     """Reload a cog"""
-    if ctx.message.author == ctx.message.server.owner:
-        try:
-            Aya.unload_extension('cogs.{}'.format(cogname))
-            default_extensions.remove('cogs.{}'.format(cogname))
-            Aya.load_extension('cogs.{}'.format(cogname))
-            default_extensions.append('cogs.{}'.format(cogname))
-            print('{} has been reloaded.'.format(cogname))
-        except Exception as e:
-            await ctx.send('\N{PISTOL}')
-            await ctx.send('{}: {}'.format(type(e).__name__, e))
-        else:
-            await ctx.send('\N{OK HAND SIGN}')
-    else:
-        ctx.send('You don\'t have permission.')
 
+    try:
+        Aya.unload_extension('cogs.{}'.format(cogname))
+        default_extensions.remove('cogs.{}'.format(cogname))
+        Aya.load_extension('cogs.{}'.format(cogname))
+        default_extensions.append('cogs.{}'.format(cogname))
+        print('{} has been reloaded.'.format(cogname))
+    except Exception as e:
+        await ctx.send('\N{PISTOL}')
+        await ctx.send('{}: {}'.format(type(e).__name__, e))
+    else:
+        await ctx.send('\N{OK HAND SIGN}')
+        
+@load.error
+@unload.error
+@reload.error
+async def cogs_error(ctx, error):
+    if isinstance(error, commands.CheckFailure):
+        await ctx.send("You need to be the server owner to do that.")
+    elif isinstance(error, commands.errors.MissingRequiredArgument):
+        await ctx.send("You must specify a cog.")
+    else:
+        await ctx.send("An unknown error has occured!\nError message: ```{}```".format(error))
 
 @Aya.command()
 async def ping():
     """Ping Aya"""
+
     await ctx.send('Pong!')
 
 
