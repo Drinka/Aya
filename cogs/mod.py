@@ -4,21 +4,23 @@ from discord.ext import commands
 import asyncio
 import json
 
-class Mod:
-    """Moderation tools"""
+global data
+with open('data/filterlist.json', 'r') as f:
+    data = json.loads(f.read())
 
-        def __init__(self, Aya):
+class Mod:
+  def __init__(self, Aya):
         self.Aya = Aya
         self.kick_and_ban_msg = ['Done. That felt good.',
-                                 'Cya sucker!',
-                                 'Looks like we\'ll never see him again!',
-                                 'Let\'s hope he\'s not back in 5 minutes.',
-                                 'Enough is ENOUGH!']
+                                    'Cya sucker!',
+                                    'Looks like we\'ll never see him again!',
+                                    'Let\'s hope he\'s not back in 5 minutes.',
+                                    'Enough is ENOUGH!']
         self.unban_msg = ['Ahhh... Old memories...',
-                          'And... He\'s back',
-                          'And I saw Michael Jordan walking down the street...',
-                          'Forgiveness is key.',
-                          'I wonder how much he\'s grown since then...']
+                            'And... He\'s back',
+                            'And I saw Michael Jordan walking down the street...',
+                            'Forgiveness is key.',
+                            'I wonder how much he\'s grown since then...']
 
     @commands.command()
     async def kick(self, ctx, *, member: discord.Member):

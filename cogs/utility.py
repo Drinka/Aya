@@ -43,8 +43,9 @@ class Utility:
 
         time = ctx.message.timestamp
         desc = '{0} is chilling in {1} mode.'.format(user.name, user.status)
+        color = ctx.get_dominant_color(user.avatar_url)
         member_number = sorted(guild.members, key=lambda m: m.joined_at).index(user) + 1
-        em = discord.Embed(color=0x832EEA, description=desc, timestamp=time)
+        em = discord.Embed(color=color, description=desc, timestamp=time)
         em.add_field(name='Name', value=user.name, inline=True)
         em.add_field(name='Member No.',value=str(member_number),inline = True)
         em.add_field(name='Account Created', value=user.created_at.__format__('%A, %B %d, %Y'))
@@ -70,8 +71,7 @@ class Utility:
         passed = (ctx.message.timestamp - guild.created_at).days
         created_at = ("Server created on {}. That's {} days ago!"
                       "".format(guild.created_at.strftime("%b %d %Y at %H:%M"), passed))
-        color = ('#%06x' % random.randint(0, 0xFFFFFF))
-        color = int(color[1:], 16)
+        color = ctx.get_dominant_color(guild.icon_url)
         em = discord.Embed(description=created_at, color=color)
         em.add_field(name='Region', value=str(guild.region))
         em.add_field(name='Users', value='{}/{}'.format(online, total_users))

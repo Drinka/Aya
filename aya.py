@@ -12,8 +12,8 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-Aya = commands.Bot('a.')
-Aya.remove_command('help')
+bot = commands.Bot('a.')
+bot.remove_command('help')
 
 default_extensions = [
      'cogs.help',
@@ -24,9 +24,9 @@ default_extensions = [
 ]
 
 
-@Aya.event
+@bot.event
 async def on_ready():
-    print('Aya is ready! \n User : {} \n ID : {}'.format(Aya.user.name, Aya.user.id))
+    print('Aya is ready! \n User : {} \n ID : {}'.format(bot.user.name, bot.user.id))
 
 
 
@@ -36,19 +36,19 @@ def is_owner():
     return commands.check(predicate)
 
 
-@Aya.command()
+@bot.command()
 async def cogs(ctx):
     """A better way to show the names of the cogs"""
     await ctx.send('cogs : ')
     for cog in default_extensions:
         await ctx.send(cog)
 
-@Aya.command()
+@bot.command()
 async def load(ctx, *, cogname):
     """Load a cog"""
     if ctx.message.author == ctx.message.server.owner:
         try:
-            Aya.load_extension('cogs.{}'.format(cogname))
+            bot.load_extension('cogs.{}'.format(cogname))
             default_extensions.append('cogs.{}'.format(cogname))
             print('{} has been loaded.'.format(cogname))
         except Exception as e:
@@ -60,12 +60,12 @@ async def load(ctx, *, cogname):
     else:
         await ctx.send('\N{OK HAND SIGN}')
 
-@Aya.command()
+@bot.command()
 async def unload(ctx, *, cogname):
     """Unload a cog"""
     if ctx.message.author == ctx.message.server.owner:
         try:
-            Aya.unload_extension('cogs.{}'.format(cogname))
+            bot.unload_extension('cogs.{}'.format(cogname))
             default_extensions.remove('cogs.{}'.format(cogname))
             print('{} has been unloaded.'.format(cogname))
         except Exception as e:
@@ -77,15 +77,15 @@ async def unload(ctx, *, cogname):
         ctx.send('You don\'t have permission.')
 
 
-@Aya.command()
+@bot.command()
 @is_owner()
 async def reload(ctx, *, cogname):
     """Reload a cog"""
 
     try:
-        Aya.unload_extension('cogs.{}'.format(cogname))
+        bot.unload_extension('cogs.{}'.format(cogname))
         default_extensions.remove('cogs.{}'.format(cogname))
-        Aya.load_extension('cogs.{}'.format(cogname))
+        bot.load_extension('cogs.{}'.format(cogname))
         default_extensions.append('cogs.{}'.format(cogname))
         print('{} has been reloaded.'.format(cogname))
     except Exception as e:
@@ -105,7 +105,7 @@ async def cogs_error(ctx, error):
     else:
         await ctx.send("An unknown error has occured!\nError message: ```{}```".format(error))
 
-@Aya.command()
+@bot.command()
 async def ping():
     """Ping Aya"""
 
@@ -115,8 +115,8 @@ async def ping():
 if __name__ == "__main__":
     print('Loading extensions...')
     for ext in default_extensions:
-        Aya.load_extension(ext)
+        bot.load_extension(ext)
     print('Good to go!')
     print('----------')
 
-Aya.run('')
+bot.run('MzQ3MzkyNTM3MjA5NjAyMDQ5.DHfLQA.LzWaNOfdZeRxYf-9SJcj7Jk3s78')
