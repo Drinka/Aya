@@ -17,9 +17,10 @@ Aya.remove_command('help')
 
 default_extensions = [
      'cogs.help',
-     'cogs.moderator',
+     'cogs.mod',
      'cogs.bank',
-     'cogs.minigames'
+     'cogs.minigames',
+     'cogs.info'
 ]
 
 
@@ -92,7 +93,7 @@ async def reload(ctx, *, cogname):
         await ctx.send('{}: {}'.format(type(e).__name__, e))
     else:
         await ctx.send('\N{OK HAND SIGN}')
-        
+
 @load.error
 @unload.error
 @reload.error
