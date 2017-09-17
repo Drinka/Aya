@@ -20,7 +20,7 @@ default_extensions = [
      'cogs.mod',
      'cogs.bank',
      'cogs.minigames',
-     'cogs.info'
+     # 'cogs.info'
 ]
 
 
@@ -106,7 +106,7 @@ async def cogs_error(ctx, error):
         await ctx.send("An unknown error has occured!\nError message: ```{}```".format(error))
 
 @bot.command()
-async def ping():
+async def ping(ctx):
     """Ping Aya"""
 
     await ctx.send('Pong!')
@@ -119,4 +119,4 @@ if __name__ == "__main__":
     print('Good to go!')
     print('----------')
 
-bot.run('MzQ3MzkyNTM3MjA5NjAyMDQ5.DHfLQA.LzWaNOfdZeRxYf-9SJcj7Jk3s78')
+bot.run('')
