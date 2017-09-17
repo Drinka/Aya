@@ -17,15 +17,9 @@ Aya.remove_command('help')
 
 default_extensions = [
      'cogs.help',
-     'cogs.invite',
      'cogs.moderator',
-     'cogs.coinflip',
-     'cogs.dice',
-     'cogs.gif',
-     'cogs.8ball',
-     'cogs.userfeatures',
-     'cogs.minigames',
-    'cogs.blacklist',
+     'cogs.bank',
+     'cogs.minigames'
 ]
 
 
